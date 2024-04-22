@@ -12,7 +12,7 @@ namespace Sample.Domain.Models
             Id = id;
             Name = name;
             Email = email;
-            BirthDate = birthDate;
+            BirthDate = birthDate.Date;
         }
 
         public string Name { get; private set; }

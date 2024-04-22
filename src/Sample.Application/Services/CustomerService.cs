@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
 using MongoDB.Bson;
+using Sample.Application.EventSourcedNormalizers;
 using Sample.Application.Interfaces;
 using Sample.Application.ViewModels;
 using Sample.Domain.Commands.Customer;
@@ -15,13 +16,15 @@ namespace Sample.Application.Services
         private readonly IMediatorHandler _mediator;
 
         private readonly ICustomerRepository _customerRepository;
+        private readonly IEventStoreRepository _eventStoreRepository;
 
-        public CustomerService(IMapper mapper, IMediatorHandler mediator, ICustomerRepository customerRepository)
+        public CustomerService(IMapper mapper, IMediatorHandler mediator, ICustomerRepository customerRepository, IEventStoreRepository eventStoreRepository)
         {
             _mapper = mapper;
             _mediator = mediator;
 
             _customerRepository = customerRepository;
+            _eventStoreRepository = eventStoreRepository;
         }
 
         public async Task<IEnumerable<CustomerViewModel>> GetAll()
@@ -64,6 +67,11 @@ namespace Sample.Application.Services
 
             var deleteCommand = new DeleteCustomerCommand(objectId);
             return await _mediator.SendCommand(deleteCommand);
+        }
+
+        public async Task<IList<CustomerHistoryData>> GetAllHistory(string id)
+        {
+            return CustomerHistory.ToJavaScriptCustomerHistory(await _eventStoreRepository.GetAllAsync(id));
         }
     }
 }

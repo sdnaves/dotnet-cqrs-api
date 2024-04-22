@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Sample.Application.EventSourcedNormalizers;
 using Sample.Application.Interfaces;
 using Sample.Application.ViewModels;
 
@@ -55,6 +57,12 @@ namespace Sample.Services.Api.Controllers
             var result = await _customerService.Delete(id);
 
             return Ok(result);
+        }
+
+        [HttpGet("history/{id}")]
+        public async Task<IList<CustomerHistoryData>> History(string id)
+        {
+            return await _customerService.GetAllHistory(id);
         }
     }
 }

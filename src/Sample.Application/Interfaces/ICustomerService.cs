@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using Sample.Application.EventSourcedNormalizers;
 using Sample.Application.ViewModels;
 
 namespace Sample.Application.Interfaces
@@ -10,5 +11,6 @@ namespace Sample.Application.Interfaces
         Task<ValidationResult> Create(CustomerViewModel customerViewModel);
         Task<ValidationResult> Update(CustomerViewModel customerViewModel);
         Task<ValidationResult> Delete(string id);
+        Task<IList<CustomerHistoryData>> GetAllHistory(string id);
     }
 }
