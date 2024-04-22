@@ -10,19 +10,18 @@ namespace Sample.Domain.Core.Models
         protected Entity()
         {
             Id = ObjectId.GenerateNewId();
-
-            _domainEvents = [];
         }
 
         [BsonId]
         [JsonProperty("_id")]
         public ObjectId Id { get; set; }
 
-        private readonly List<Event> _domainEvents;
+        private List<Event> _domainEvents;
         public IReadOnlyCollection<Event> DomainEvents => _domainEvents.AsReadOnly();
 
         public void AddDomainEvent(Event domainEvent)
         {
+            _domainEvents ??= [];
             _domainEvents.Add(domainEvent);
         }
 

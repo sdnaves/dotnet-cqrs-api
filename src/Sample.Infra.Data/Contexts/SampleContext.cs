@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using Sample.Domain.Core.Interfaces;
 using Sample.Domain.Core.Models;
 using Sample.Infra.CrossCutting.Attributes;
-using Sample.Infra.CrossCutting.Mediator;
+using Sample.Infra.CrossCutting.Mediator.Interfaces;
 using System.Reflection;
 
 namespace Sample.Infra.Data.Contexts
@@ -47,34 +47,35 @@ namespace Sample.Infra.Data.Contexts
 
         public async Task<int> SaveAsync()
         {
+            using (Session = await _client.StartSessionAsync())
+            {
+                Session.StartTransaction();
+
+                var commandTasks = _commands.Select(s => s.Command());
+
+                await Task.WhenAll(commandTasks);
+
+                await Session.CommitTransactionAsync();
+            }
+
+            return _commands.Count;
+        }
+
+        public async Task<bool> Commit()
+        {
             try
             {
-                using (Session = await _client.StartSessionAsync())
-                {
-                    Session.StartTransaction();
+                var success = await SaveAsync() > 0;
 
-                    var commandTasks = _commands.Select(s => s.Command());
+                if (success)
+                    await _mediatorHandler.PublishDomainEvents(_commands.Select(s => s.Document)).ConfigureAwait(false);
 
-                    await Task.WhenAll(commandTasks);
-
-                    await Session.CommitTransactionAsync();
-                }
-
-                return _commands.Count;
+                return success;
             }
             finally
             {
                 _commands.Clear();
             }
-        }
-
-        public async Task<bool> Commit()
-        {
-            var success = await SaveAsync() > 0;
-
-            await _mediatorHandler.PublishDomainEvents(_commands.Select(s => s.Document)).ConfigureAwait(false);
-
-            return success;
         }
 
         public void AddCommand(Func<Task> command, Entity document)

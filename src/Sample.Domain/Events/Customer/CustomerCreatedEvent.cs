@@ -1,19 +1,19 @@
 ﻿using MongoDB.Bson;
-using Sample.Domain.Core.Models;
-using Sample.Infra.CrossCutting.Attributes;
+using Sample.Infra.CrossCutting.Mediator.Models;
 
-namespace Sample.Domain.Models
+namespace Sample.Domain.Events.Customer
 {
-    [BsonCollection("customers")]
-    public class Customer : Entity
+    public class CustomerCreatedEvent : Event
     {
-        public Customer(ObjectId id, string name, string email, DateTime birthDate)
+        public CustomerCreatedEvent(ObjectId id, string name, string email, DateTime birthDate)
         {
             Id = id;
             Name = name;
             Email = email;
             BirthDate = birthDate;
+            AggregateId = id.ToString();
         }
+        public ObjectId Id { get; set; }
 
         public string Name { get; private set; }
 
