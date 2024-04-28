@@ -1,4 +1,4 @@
-
+using Sample.Infra.CrossCutting.Security;
 using Sample.Services.Api.Configurations;
 
 namespace Sample.Services.Api
@@ -15,6 +15,8 @@ namespace Sample.Services.Api
                    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
                    .AddEnvironmentVariables();
 
+            builder.Services.AddAuthConfiguration(builder.Configuration);
+
             // AutoMapper Config
             builder.Services.AddAutoMapperConfiguration();
 
@@ -22,7 +24,7 @@ namespace Sample.Services.Api
             builder.Services.AddSwaggerConfiguration();
 
             // MediatR Config
-            builder.Services.AddMediatRConfiguration();
+            builder.Services.AddMediatorConfiguration();
 
             // .NET Native DI Abstraction
             builder.Services.AddDependencyInjectionConfiguration();
@@ -37,7 +39,7 @@ namespace Sample.Services.Api
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthConfiguration();
 
             app.MapControllers();
 

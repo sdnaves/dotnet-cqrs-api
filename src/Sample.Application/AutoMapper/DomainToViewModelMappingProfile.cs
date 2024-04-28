@@ -8,7 +8,9 @@ namespace Sample.Application.AutoMapper
     {
         public DomainToViewModelMappingProfile()
         {
-            CreateMap<Customer, CustomerViewModel>();
+            // Account
+            CreateMap<Account, AccountViewModel>()
+                .ForMember(dst => dst.PasswordHash, act => act.MapFrom(src => src.Password));
         }
     }
 }

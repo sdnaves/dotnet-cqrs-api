@@ -16,7 +16,7 @@ namespace Sample.Domain.Core.Models
         [JsonProperty("_id")]
         public ObjectId Id { get; set; }
 
-        private List<Event> _domainEvents;
+        private List<Event> _domainEvents = [];
         public IReadOnlyCollection<Event> DomainEvents => _domainEvents.AsReadOnly();
 
         public void AddDomainEvent(Event domainEvent)

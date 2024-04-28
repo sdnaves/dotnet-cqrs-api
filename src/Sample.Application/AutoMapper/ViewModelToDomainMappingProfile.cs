@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using MongoDB.Bson;
 using Sample.Application.ViewModels;
-using Sample.Domain.Commands.Customer;
+using Sample.Domain.Commands.Account;
+using Sample.Infra.CrossCutting.Security.Utilities;
 
 namespace Sample.Application.AutoMapper
 {
@@ -9,11 +10,12 @@ namespace Sample.Application.AutoMapper
     {
         public ViewModelToDomainMappingProfile()
         {
-            CreateMap<CustomerViewModel, CreateCustomerCommand>()
-                .ConstructUsing(c => new CreateCustomerCommand(c.Name, c.Email, c.BirthDate));
+            // Account
+            CreateMap<CreateAccountViewModel, CreateAccountCommand>()
+                .ConstructUsing(c => new CreateAccountCommand(c.Name, c.Email, c.Password));
 
-            CreateMap<CustomerViewModel, UpdateCustomerCommand>()
-                .ConstructUsing(c => new UpdateCustomerCommand(ObjectId.Parse(c.Id), c.Name, c.Email, c.BirthDate));
+            CreateMap<AccountViewModel, UpdateAccountCommand>()
+                .ConstructUsing(c => new UpdateAccountCommand(ObjectId.Parse(c.Id), c.Name, c.Email, c.PasswordHash));
         }
     }
 }

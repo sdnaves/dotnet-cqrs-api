@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sample.Infra.CrossCutting.Mediator\Sample.Infra.CrossCutting.Mediator.csproj" />
-    <ProjectReference Include="..\Sample.Infra.CrossCutting\Sample.Infra.CrossCutting.csproj" />
   </ItemGroup>
 
 </Project>

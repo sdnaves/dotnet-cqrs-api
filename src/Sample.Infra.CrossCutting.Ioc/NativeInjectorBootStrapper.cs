@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Sample.Application.Interfaces;
 using Sample.Application.Services;
-using Sample.Domain.Commands.Customer;
-using Sample.Domain.Events.Customer;
+using Sample.Domain.Commands.Account;
+using Sample.Domain.Events.Account;
 using Sample.Domain.Interfaces;
 using Sample.Infra.CrossCutting.Mediator;
 using Sample.Infra.CrossCutting.Mediator.Interfaces;
@@ -19,7 +19,7 @@ namespace Sample.Infra.CrossCutting.Ioc
         public static void RegisterServices(IServiceCollection services)
         {
             // Mediator
-            services.RegisterMeediator();
+            services.RegisterMediator();
 
             // Application
             services.RegisterApplicationServices();
@@ -37,7 +37,7 @@ namespace Sample.Infra.CrossCutting.Ioc
             services.RegisterInfraDataEventSourcing();
         }
 
-        private static void RegisterMeediator(this IServiceCollection services)
+        private static void RegisterMediator(this IServiceCollection services)
         {
             services.AddScoped<IEventStore, EventStore>();
 
@@ -46,26 +46,30 @@ namespace Sample.Infra.CrossCutting.Ioc
 
         private static void RegisterApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IHistoryService, HistoryService>();
         }
 
         private static void RegisterDomainEvents(this IServiceCollection services)
         {
-            services.AddScoped<INotificationHandler<CustomerCreatedEvent>, CustomerEventHandler>();
-            services.AddScoped<INotificationHandler<CustomerUpdatedEvent>, CustomerEventHandler>();
-            services.AddScoped<INotificationHandler<CustomerDeletedEvent>, CustomerEventHandler>();
+            // Account
+            services.AddScoped<INotificationHandler<AccountCreatedEvent>, AccountEventHandler>();
+            services.AddScoped<INotificationHandler<AccountUpdatedEvent>, AccountEventHandler>();
+            services.AddScoped<INotificationHandler<AccountDeletedEvent>, AccountEventHandler>();
         }
 
         private static void RegisterDomainCommands(this IServiceCollection services)
         {
-            services.AddScoped<IRequestHandler<CreateCustomerCommand, ValidationResult>, CustomerCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateCustomerCommand, ValidationResult>, CustomerCommandHandler>();
-            services.AddScoped<IRequestHandler<DeleteCustomerCommand, ValidationResult>, CustomerCommandHandler>();
+            // Account
+            services.AddScoped<IRequestHandler<CreateAccountCommand, ValidationResult>, AccountCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateAccountCommand, ValidationResult>, AccountCommandHandler>();
+            services.AddScoped<IRequestHandler<DeleteAccountCommand, ValidationResult>, AccountCommandHandler>();
         }
 
         private static void RegisterInfraData(this IServiceCollection services)
         {
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
 
             // Context
             services.AddScoped<SampleContext>();

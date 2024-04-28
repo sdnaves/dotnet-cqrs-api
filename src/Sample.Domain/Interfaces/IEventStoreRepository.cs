@@ -1,4 +1,4 @@
-﻿using Sample.Domain.Core.Models;
+﻿using Sample.Domain.Models;
 
 namespace Sample.Domain.Interfaces
 {
